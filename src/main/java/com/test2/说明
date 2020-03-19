@@ -1,0 +1,46 @@
+搭建kafka配置   /kafka_2.13-2.4.1/config/ server.properties
+第一步:修改虚拟机相关配置，打开2181 9092的端口，并关闭防火墙
+防火墙（root）
+systemctl stop firewalld.service #停止firewall
+
+systemctl disable firewalld.service #禁止firewall开机启动
+
+systemctl status firewalld.service #查看firewall的状态
+
+打开相关端口（root）
+firewall-cmd --zone=public --add-port=2181/tcp --permanent
+
+firewall-cmd --zone=public --add-port=9092/tcp --permanent
+
+第二步：修改kafka配置 server.properties
+增加如下配置
+
+listeners=PLAINTEXT://你的ip:9092
+
+advertised.host.name=你的ip
+
+
+如果是腾讯云、阿里云
+host.name=172.x.x.x    //这里是腾讯云的内网地址
+advertised.host.name=211.159.160.xxx    //这里是腾讯云的外网IP
+只需要依赖
+<!-- <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>0.11.0.0</version>
+
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.11</artifactId>
+      <version>0.11.0.0</version>
+    </dependency>
+     -->
+   需要启动 zookeeper   bin/zookeeper-server-start.sh config/zookeeper.properties
+   kafka    bin/kafka-server-start.sh  config/server.properties
+  先创建test1  bin/kafka-topics.sh --create --zookeeper 192.168.220.128:2181 --replication-factor 1 --partitions 1 --topic test1  
+ 
+ 生产者测试
+ bin/kafka-console-producer.sh  --broker-list 192.168.220.128:9092  --topic test1    
+  测试观察消费者
+  bin/kafka-console-consumer.sh --bootstrap-server 192.168.220.128:9092 --topic test1 --from-beginning
