@@ -18,6 +18,11 @@ demo-0~2，命名规则：topicname-partitionid
 // todo 只消费分区 0 的消息
 TopicPartition partitionDemo = new TopicPartition(topic,0);
 consumer.assign(Arrays.asList(partitionDemo));
+
+消息的消费原理
+在实际生产过程中，每个topic都会有多个partition，多个partition的好处在于，一方面能够对broker上的数据进行分片有效减少消息的容量从而提升io性能。另一方面，为了提高消费端的消费能力，一般会通过多个consumer 去消费同一个topic，也就是消费端的负载均衡机制。
+
+在group.id相同的consumer进行消费同一个topic时，一个consumer消费过得数据在另一consumer中不会被消费到，那么同一个consumer group 里面的consumer 去消费数据的时候，会根据分片进行分配消费分区的数据。如果有三个partition ，同时启动三个group.id 相同的consumer去同时消费同一个topic，最终的结果是三个consumer 会分别消费一个partition 的数据。
 ————————————————
 版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/guaoran/article/details/87736600
