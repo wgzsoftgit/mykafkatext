@@ -26,3 +26,20 @@ consumer.assign(Arrays.asList(partitionDemo));
 ————————————————
 版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/guaoran/article/details/87736600
+分区分配策略
+在kafka中存在两种分区分配策略，一种是Range（默认），一种是RoundRobin（轮询）。通过partition.assignment.strategy 参数来设置
+Range strategy 范围分区
+Range 策略是对每个主题而言的，首先对同一个主题里面的分区按照序号进行排序。并对消费者按照字母顺序进行排序。假设有10个分区，3个消费者，排完序的分区将会是0-9;消费者线程排完序是C0-0,C1-1,C2-2 。然后将partitions的个数除于消费者线程的总数来决定每个消费者线程将会消费几个分区。如果除不尽，则前面的消费者会多消费一个分区。所以最终结果是：C0消费 0-3分区，C1消费4-6分区，C2消费7-9分区。
+
+如果同时消费两个主题的话，分区数相同，消费者相同，此时，C0消费者比其他消费者线程多消费2个分区，这就是Range Strategy 的一个弊端。最好是分区数是消费者的整数倍。
+
+RoundRobin strategy 轮询分区
+轮询分区策略是把所有的partition 和所有consumer 都列出来，然后按照hashcode进行排序。最后通过轮询算法分配partition给消费者。如果所有consumer实例的订阅都是相同的，那么partition会均匀分布。
+
+使用轮询分区策略必须满足两个条件
+
+每个主题的消费者实例具有相同数量的流
+每个消费者订阅的主题必须是相同的。
+————————————————
+版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/guaoran/java/article/details/87736600

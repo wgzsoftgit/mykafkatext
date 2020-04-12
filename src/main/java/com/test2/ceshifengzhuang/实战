@@ -1,0 +1,5 @@
+生产者封装：
+   1、发送并忘记（不关心消息是否正常到达）
+   二、同步发送（等待返回Future对象
+   三、异步发送（指定回调函数，服务器在返回响应时调用该函数）
+   https://www.liangzl.com/get-article-detail-155234.html

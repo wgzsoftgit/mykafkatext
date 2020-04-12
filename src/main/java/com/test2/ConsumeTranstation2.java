@@ -31,7 +31,7 @@ partitions)方法，分别用来暂停某些分区在拉取操作时返回数据
 	public static void main(String[] args) {
 
 Properties props = new Properties();
-props.put("bootstrap.servers", "192.168.220.128:9092");
+props.put("bootstrap.servers", "192.168.220.129:9092");
 props.put("group.id", "test");
 //props.put("client.id", "test");
 props.put("enable.auto.commit", true);// 显示设置偏移量自动提交
@@ -39,7 +39,7 @@ props.put("auto.commit.interval.ms", 1000);// 设置偏移量提交时间间隔
 props.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
 props.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
 KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-// 订阅主题
+// 订阅主题    和partition分区
 consumer.assign(Arrays.asList(new TopicPartition("test1", 0)));
 try {
     Map<TopicPartition, Long> timestampsToSearch = new HashMap<TopicPartition,Long>();
@@ -47,7 +47,7 @@ try {
     TopicPartition partition = new TopicPartition("test1", 0);
     // 设置查询12 小时之前消息的偏移量
     timestampsToSearch.put(partition, (System.currentTimeMillis() - 12 * 3600 * 1000));
-    // 会返回时间大于等于查找时间的第一个偏移量
+    // 会返回时间大于等于查找时间的第一个偏移量                                                       根据时间戳来访问消息
     Map<TopicPartition, OffsetAndTimestamp> offsetMap = consumer.offsetsForTimes (timestampsToSearch);
     OffsetAndTimestamp offsetTimestamp = null;
     // 这里依然用for 轮询，当然由于本例是查询的一个分区，因此也可以用if 处理

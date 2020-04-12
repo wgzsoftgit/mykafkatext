@@ -13,6 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Producer {
 	public static void main(String[] args) {
@@ -20,7 +21,7 @@ public class Producer {
         //  配置信息
         Properties props = new Properties();
         //  kafka 集群 "192.168.220.128:9092,192.168.220.128:9093"
-        props.put("bootstrap.servers", "192.168.220.128:9092");
+        props.put("bootstrap.servers", "192.168.220.129:9092");
         //  应答级别
         props.put("acks", "all");
         //  重试此时
@@ -38,7 +39,7 @@ public class Producer {
         //   创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         //   发送十条消息  
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 3; i++)
         {
         	//1、异步发送如下  异步回调官方案例 （不阻塞）
 //            producer.send(new ProducerRecord<String, String>("test1", "消息--"+i),new Callback() {
@@ -55,15 +56,20 @@ public class Producer {
         	
         	
 //2、同步发送官方案例 （阻塞）
-        	 try {
-				producer.send(new ProducerRecord<String, String>("test1", "消息--"+i)).get();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ExecutionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+        	 
+				//producer.send(new ProducerRecord<String, String>("test1", "消息--"+i)).get();//1方案
+				//2方案
+		     		 Future<RecordMetadata> funture=	producer.send(new ProducerRecord<String, String>("test1", "消息--"+i));
+		     		try {
+		     			RecordMetadata  rm= funture.get();
+		     			System.out.println("服务器broker响应：主题："+rm.topic()+"\t分区"+rm.partition()+"\t偏移量："+rm.offset());
+					} catch (InterruptedException | ExecutionException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+   
+        	 
+
 
             try {
                 Thread.sleep(2000);//停顿两秒  便于观察

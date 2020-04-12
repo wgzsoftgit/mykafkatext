@@ -1,0 +1,4 @@
+生产者
+  同步发送和异步发送     
+        异步发送 （可以判断返回值）
+      producer 发送消息到broker的过程是push，而consumer 从broker 消费消息的过程是pull

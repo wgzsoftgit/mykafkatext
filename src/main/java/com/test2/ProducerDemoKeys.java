@@ -13,7 +13,7 @@ public class ProducerDemoKeys {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         final Logger logger = LoggerFactory.getLogger(ProducerDemoKeys.class);
-        String bootstrapServers = "192.168.220.128:9092";
+        String bootstrapServers = "192.168.220.129:9092";
 
         // create Producer properties
         Properties properties = new Properties();

@@ -13,7 +13,7 @@ public class transtationkafka {
 	
 	public static void main(String[] args) {
 		Properties props = new Properties();
-		props.put("bootstrap.servers", "192.168.220.128:9092");
+		props.put("bootstrap.servers", "192.168.220.129:9092");
 		props.put("transactional.id", "my-transactional-id");
 		  props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 	        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -23,7 +23,7 @@ public class transtationkafka {
 		 
 		try {
 		    producer.beginTransaction();
-		    for (int i = 0; i < 10; i++)
+		    for (int i = 0; i < 5; i++)
 		        producer.send(new ProducerRecord<>("test1", "key"+Integer.toString(i),"value"+ Integer.toString(i)));
 		    producer.commitTransaction();
 		} catch (ProducerFencedException | OutOfOrderSequenceException | AuthorizationException e) {

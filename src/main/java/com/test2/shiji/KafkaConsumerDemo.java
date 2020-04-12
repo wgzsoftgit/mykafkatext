@@ -16,12 +16,12 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
  */
 public class  KafkaConsumerDemo extends Thread {
     private final static String CONNECT_URL =
-            "192.168.220.128:9092";//,192.168.45.134:9092,192.168.45.135:9092
+            "192.168.220.129:9092";//,192.168.45.134:9092,192.168.45.135:9092
     private final KafkaConsumer<Integer,String> consumer;
     public KafkaConsumerDemo(String topic){
         Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,CONNECT_URL);
-        //分组id
+        //分组id---------------------------
         properties.put(ConsumerConfig.GROUP_ID_CONFIG,"KafkaConsumerDemo1");
         // enable.auto.commit 消费者消费消息以后自动提交，只有当消息提交以后，该消息才不会被再次接收到
         // 还可以配合 auto.commit.interval.ms 控制自动提交的频率。

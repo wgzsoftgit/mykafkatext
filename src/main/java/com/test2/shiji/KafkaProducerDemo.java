@@ -19,7 +19,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
  */
 public class KafkaProducerDemo extends Thread {
     private final static String CONNECT_URL =
-            "192.168.220.128:9092";//,192.168.45.134:9092,192.168.45.135:9092
+            "192.168.220.129:9092";//,192.168.45.134:9092,192.168.45.135:9092
     private final KafkaProducer<Integer,String> producer;
     private final boolean isAysnc;
     private final String topic;
@@ -29,7 +29,7 @@ public class KafkaProducerDemo extends Thread {
         Properties properties = new Properties();
         //连接地址
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,CONNECT_URL);
-        properties.put(ProducerConfig.CLIENT_ID_CONFIG,"KafkaProducerDemo");
+       // properties.put(ProducerConfig.CLIENT_ID_CONFIG,"KafkaProducerDemo");  //用于消费者的分组id
         // producer 发送消息到 broker 上以后的确认值
         // 0 :表示 producer 不需要等待 broker 的消息确认，如果server 宕机 ，数据会丢失
         // 1 :表示 producer 只需要获得 kafka 集群中的 leader 节点确认即可
@@ -62,8 +62,8 @@ public class KafkaProducerDemo extends Thread {
     @Override
     public void run() {
         int num = 0;
-        while(num<50){
-            String message = "message_"+num;
+        while(num<10){
+            String message = "message66666_"+num;
             System.out.println("begin...send..."+message);
             if(isAysnc){//异步发送
                 producer.send(new ProducerRecord<Integer, String>(topic,message),new Callback(){
@@ -96,6 +96,6 @@ public class KafkaProducerDemo extends Thread {
     }
 
     public static void main(String[] args) {
-        new KafkaProducerDemo("test1",false).start();
+        new KafkaProducerDemo("test1",true).start();
     }
 }

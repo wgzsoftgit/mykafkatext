@@ -8,7 +8,7 @@ import java.util.Properties;
  
 public class ProducerFastStart {
  
-    public static final String BROKER_LIST = "192.168.220.128:9092";
+    public static final String BROKER_LIST = "192.168.220.129:9092";
     public static final String TOPIC = "test1";
  
     public static void main(String[] args) {
