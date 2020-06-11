@@ -21,12 +21,16 @@ import scala.collection.JavaConversions;
 
 
  
- 
+/**
+ * 测试   --err 
+ * @author wgz
+ * @date 创建时间：2020年6月10日 下午5:27:47
+ */
 public class TopicsController {
  
 	public static void main(String[] args) {
 		TopicsController topicsController=new TopicsController();
-		topicsController.listAllTopic("/root/kafka_2.13-2.4.1/bin/kafka-topics.sh --zookeeper 192.168.220.129:2181 --list");
+		topicsController.listAllTopic("/root/kafka_2.13-2.4.1/bin/kafka-topics.sh --zookeeper 192.168.220.129:9092 --list");
 		
 	}
     /*

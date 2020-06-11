@@ -1,4 +1,4 @@
-package com.test2;
+package com.test2.exection;
 
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -24,7 +24,7 @@ public class Exectionkafka {
         //  配置信息
         Properties props = new Properties();
         //  kafka 集群 "192.168.220.128:9092,192.168.220.128:9093"
-        props.put("bootstrap.servers", "192.168.220.128:9092");
+        props.put("bootstrap.servers", "192.168.220.129:9092");
         //  应答级别
         props.put("acks", "all");
         //  重试此时
@@ -42,10 +42,10 @@ public class Exectionkafka {
         //   创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         //   发送十条消息  
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 5; i++)
         {
         	//1、异步发送如下  异步回调官方案例 （不阻塞）
-            producer.send(new ProducerRecord<String, String>("test1", "消息--"+i),new Callback() {
+            producer.send(new ProducerRecord<String, String>("test1", "消息--"+i+3),new Callback() {
                     public void onCompletion(RecordMetadata metadata, Exception e) {
                         if(e ==null){
                             //正常处理逻辑

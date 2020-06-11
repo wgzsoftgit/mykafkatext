@@ -1,0 +1,12 @@
+ack:
+ack确认机制设置为0，表示不等待响应，不等待borker的确认信息，最小延迟，producer无法知道消息是否发生成功，消息可能丢失，但具有最大吞吐量。
+ack确认机制设置为-1，也就是让消息写入leader和所有的副本，ISR列表中的所有replica都返回确认消息。  重要
+ack确认机制设置为1，leader已经接收了数据的确认信息，replica异步拉取消息，比较折中。
+ack确认机制设置为2，表示producer写partition leader和其他一个follower成功的时候，broker就返回成功，无论其他的partition follower是否写成功。
+ack确认机制设置为 "all" 即所有副本都同步到数据时send方法才返回, 以此来完全判断数据是否发送成功, 理论上来讲数据不会丢失。
+min.insync.replicas=1 意思是至少有1个replica返回成功，否则product异常
+
+作者：请不要问我是谁
+链接：https://www.jianshu.com/p/4e6f01b4259d
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

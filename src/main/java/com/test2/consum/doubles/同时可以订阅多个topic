@@ -1,0 +1,27 @@
+同时可以订阅多个topic
+
+earliest 
+当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费 
+latest 
+当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，消费新产生的该分区下的数据 
+
+
+  KafkaConsumer<String ,String> consumer = new KafkaConsumer<String ,String>(props);
+  一个关键点是：这2种模式是互斥的，使用了subscribe，就不能使用assign。反之亦然。
+  //强制指定consumer消费哪个topic的哪个partion，使用的是assign函数
+  consumer.assign(Arrays.asList(partition0, partition1));
+  //  consumer.subscribe(Arrays.asList("test1"));
+    private final Set<String> subscription;  //对应subscrible模式
+    private final Set<TopicPartition> userAssignment; //对应assign模式  
+      
+      Consumer Group – 负载均衡模式 vs. Pub/Sub模式
+每一个consumer实例，在初始化的时候，都需要传一个group.id，这个group.id决定了多个Consumer在消费同一个topic的时候，是分摊，还是广播。
+
+假设多个Consumer都订阅了同一个topic，这个topic有多个partition.
+
+负载均衡模式： 多个Consumer属于同一个group，则topic对应的partition的消息会分摊到这些Consumer上。
+
+Pub/Sub模式：多个Consumer属于不同的group，则这个topic的所有消息，会广播到每一个group。
+————————————————
+版权声明：本文为CSDN博主「travi」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/chunlongyu/java/article/details/52663090

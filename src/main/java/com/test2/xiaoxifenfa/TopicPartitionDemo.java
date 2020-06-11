@@ -12,6 +12,8 @@ import org.apache.kafka.common.PartitionInfo;
 
 
 /**
+ * 在application.propertise中配置自定义分区器，配置的值就是分区器类的全路径名
+spring.kafka.producer.properties.partitioner.class=com.test2.xiaoxifenfa.TopicPartitionDemo
  * @author : guaoran
  * @Description : <br/>
  *  自定义消息分区算法
@@ -28,7 +30,7 @@ public class TopicPartitionDemo implements Partitioner {
             // 随机分区
             partitionNum = random.nextInt(partitionInfoList.size());
         }else{
-            Math.abs((key.hashCode())%partitionInfoList.size());
+        	partitionNum =  Math.abs((key.hashCode())%partitionInfoList.size());
         }
         System.err.println("topic="+topic+",key="+key+",value="+value+",partitionNum="+partitionNum);
         return partitionNum;

@@ -1,5 +1,5 @@
 搭建kafka配置   /kafka_2.13-2.4.1/config/ server.properties配置文件
-bin/zookeeper-server-start.sh config/zookeeper.properties    
+bin/zookeeper-server-start.sh config/zookeeper.properties     启动自带zookeeper
 bin/kafka-server-start.sh  config/server.properties
 第一步:修改虚拟机相关配置，打开2181 9092的端口，并关闭防火墙
 防火墙（root）
@@ -43,6 +43,11 @@ advertised.host.name=211.159.160.xxx    //这里是腾讯云的外网IP
   先创建test1  bin/kafka-topics.sh --create --zookeeper 192.168.220.128:2181 --replication-factor 1 --partitions 1 --topic test1  
  
  生产者测试
- bin/kafka-console-producer.sh  --broker-list 192.168.220.128:9092  --topic test1    
+ bin/kafka-console-producer.sh  --broker-list 192.168.220.129:9092  --topic test1    
   测试观察消费者
-  bin/kafka-console-consumer.sh --bootstrap-server 192.168.220.128:9092 --topic test1 --from-beginning
+  bin/kafka-console-consumer.sh --bootstrap-server 192.168.220.129:9092 --topic test1 --from-beginning
+
+创建topic
+bin/kafka-topics.sh --create --zookeeper 192.168.220.129:2181 --replication-factor 1 --partitions 1 --topic test1
+删除topic
+  bin/kafka-topics.sh --delete  --zookeeper 192.168.220.129:2181 --topic   topicname

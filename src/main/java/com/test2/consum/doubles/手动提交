@@ -1,0 +1,5 @@
+所以 将 enable.auto.commit 改成 false 进行手动提交
+并且设置每次拉取最大10条
+
+props.put("enable.auto.commit", "false");
+props.put("max.poll.records", 10);

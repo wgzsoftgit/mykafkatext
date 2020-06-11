@@ -1,16 +1,16 @@
 消息是kafka 中最基本的数据单元，在kafka中，一条消息有 key 、value 两部分组成，在发送一条消息时，
 我们可以指定这个 key，那么 producer 会根据 key 和partition 机制来判断当前这条消息应该发送并存储到哪个partition中；
 我们可以根据需要进行扩展producer 的partition 机制
-————————————————
-版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/guaoran/article/details/87736600
+————————————————https://blog.csdn.net/guaoran/article/details/87736600
 
 kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic demo
 partition 是以文件的形式存储在文件系统中，比如创建一个名为 demo 的topic ，其中有三个partition ，那么在kafka 的数据目录中，就有3三目录 ，
 demo-0~2，命名规则：topicname-partitionid
 
 消息默认的分发机制
-默认情况下，kafka 采用的是hash 取模的分区算法。如果key 为null，则会随机分配一个分区。这个随机是在参数”metadata.max.age.ms” 的时间范围内随机选择一个。对于这个时间段内，如果key为null，则只会发送到唯一的分区。这个值默认情况下是10分钟更新一次。
+默认情况下，kafka 采用的是hash 取模的分区算法。如果key 为null，则会随机分配一个分区。
+这个随机是在参数”metadata.max.age.ms” 的时间范围内随机选择一个。对于这个时间段内，如果key为null，
+则只会发送到唯一的分区。这个值默认情况下是10分钟更新一次。
 
 消费端消费指定的分区
 //消费指定分区的时候，不需要再订阅 
@@ -20,12 +20,16 @@ TopicPartition partitionDemo = new TopicPartition(topic,0);
 consumer.assign(Arrays.asList(partitionDemo));
 
 消息的消费原理
-在实际生产过程中，每个topic都会有多个partition，多个partition的好处在于，一方面能够对broker上的数据进行分片有效减少消息的容量从而提升io性能。另一方面，为了提高消费端的消费能力，一般会通过多个consumer 去消费同一个topic，也就是消费端的负载均衡机制。
+在实际生产过程中，每个topic都会有多个partition，多个partition的好处在于，
+一方面能够对broker上的数据进行分片有效减少消息的容量从而提升io性能。另一方面，为了提高消费端的消费能力，
+一般会通过多个consumer 去消费同一个topic，也就是消费端的负载均衡机制。
 
-在group.id相同的consumer进行消费同一个topic时，一个consumer消费过得数据在另一consumer中不会被消费到，那么同一个consumer group 里面的consumer 去消费数据的时候，会根据分片进行分配消费分区的数据。如果有三个partition ，同时启动三个group.id 相同的consumer去同时消费同一个topic，最终的结果是三个consumer 会分别消费一个partition 的数据。
+在group.id相同的consumer进行消费同一个topic时，一个consumer消费过得数据在另一consumer中不会被消费到，
+那么同一个consumer group 里面的consumer 去消费数据的时候，会根据分片进行分配消费分区的数据。
+如果有三个partition ，同时启动三个group.id 相同的consumer去同时消费同一个topic，最终的结果
+是三个consumer 会分别消费一个partition 的数据。
 ————————————————
-版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/guaoran/article/details/87736600
+https://blog.csdn.net/guaoran/article/details/87736600
 分区分配策略
 在kafka中存在两种分区分配策略，一种是Range（默认），一种是RoundRobin（轮询）。通过partition.assignment.strategy 参数来设置
 Range strategy 范围分区
@@ -43,3 +47,20 @@ RoundRobin strategy 轮询分区
 ————————————————
 版权声明：本文为CSDN博主「guaoran」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
 原文链接：https://blog.csdn.net/guaoran/java/article/details/87736600
+
+
+
+自定义分区器
+
+我们知道，kafka中每个topic被划分为多个分区，那么生产者将消息发送到topic时，具体追加到哪个分区呢？这就是所谓的分区策略，Kafka 为我们提供了默认的分区策略，同时它也支持自定义分区策略。其路由机制为：
+
+① 若发送消息时指定了分区（即自定义分区策略），则直接将消息append到指定分区；
+
+② 若发送消息时未指定 patition，但指定了 key（kafka允许为每条消息设置一个key），则对key值进行hash计算，根据计算结果路由到指定分区，这种情况下可以保证同一个 Key 的所有消息都进入到相同的分区；
+
+③  patition 和 key 都未指定，则使用kafka默认的分区策略，轮询选出一个 patition；
+
+※ 我们来自定义一个分区策略，将消息发送到我们指定的partition，首先新建一个分区器类实现Partitioner接口，重写方法，其中partition方法的返回值就表示将消息发送到几号分区
+————————————————
+版权声明：本文为CSDN博主「Felix-Yuan」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/yuanlong122716/java/article/details/105160545

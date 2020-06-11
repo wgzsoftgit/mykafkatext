@@ -22,12 +22,12 @@ public class  KafkaConsumerDemo extends Thread {
         Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,CONNECT_URL);
         //分组id---------------------------
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG,"KafkaConsumerDemo1");
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG,"KafkaConsumerDemo12");
         // enable.auto.commit 消费者消费消息以后自动提交，只有当消息提交以后，该消息才不会被再次接收到
         // 还可以配合 auto.commit.interval.ms 控制自动提交的频率。
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"true");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                "org.apache.kafka.common.serialization.IntegerDeserializer");
+                "org.apache.kafka.common.serialization.StringDeserializer");// org.apache.kafka.common.serialization.IntegerDeserializer
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.StringDeserializer");
         //auto.offset.reset
